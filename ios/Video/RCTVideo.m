@@ -864,7 +864,7 @@ static int const RCTVideoUnset = -1;
     [_player setRate:0.0];
   } else {
     if([_ignoreSilentSwitch isEqualToString:@"ignore"]) {
-      [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+      [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     } else if([_ignoreSilentSwitch isEqualToString:@"obey"]) {
       [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
     }
@@ -976,6 +976,15 @@ static int const RCTVideoUnset = -1;
   [self setPaused:_paused];
   [self setControls:_controls];
   [self setAllowsExternalPlayback:_allowsExternalPlayback];
+  [self overrideAudioOutputPortToEarpiece];
+}
+
+- (void)overrideAudioOutputPortToEarpiece {
+    NSError *error = nil;
+    // Get the current session
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    // Force output to earpiece
+    [session  overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error];
 }
 
 - (void)setRepeat:(BOOL)repeat {

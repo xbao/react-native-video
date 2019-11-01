@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Matrix;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.TimedMetaData;
 import android.net.Uri;
@@ -218,6 +219,7 @@ public class ReactVideoView extends ScalableVideoView implements
             mMediaPlayer.setOnSeekCompleteListener(this);
             mMediaPlayer.setOnCompletionListener(this);
             mMediaPlayer.setOnInfoListener(this);
+            mMediaPlayer.setAudioAttributes(createAudioAttributes(false));
             if (Build.VERSION.SDK_INT >= 23) {
                 mMediaPlayer.setOnTimedMetaDataAvailableListener(new TimedMetaDataAvailableListener());
             }
@@ -780,5 +782,11 @@ public class ReactVideoView extends ScalableVideoView implements
                 }
             }
         } catch (Exception e) {}
+    }
+
+    private static AudioAttributes createAudioAttributes(boolean isLoudspeaker) {
+        return new AudioAttributes.Builder()
+                .setUsage(isLoudspeaker ? AudioAttributes.USAGE_MEDIA : AudioAttributes.USAGE_VOICE_COMMUNICATION)
+                .build();
     }
 }
